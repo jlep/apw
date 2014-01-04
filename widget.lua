@@ -31,23 +31,22 @@ local mixer         = 'pavucontrol' -- mixer command
 
 local awful = require("awful")
 local wibox = require("wibox")
-local beautiful = require("beautiful")
 local pulseaudio = require("apw.pulseaudio")
 
 local p = pulseaudio:Create()
 
 local pulseBar = awful.widget.progressbar()
+local pulseWidget = pulseBar
 
 pulseBar:set_width(width)
 pulseBar.step = step
 
-local pulseWidget = wibox.layout.margin(pulseBar, margin_right, margin_left, margin_top, margin_bottom)
-
--- default colors overridden by Beautiful theme
-color = beautiful.apw_fg_color or color
-color_bg = beautiful.apw_bg_color or color_bg
-color_mute = beautiful.apw_mute_fg_color or color_mute
-color_bg_mute = beautiful.apw_mute_bg_color or color_bg_mute
+awful.widget.layout.margins[pulseBar.widget] = {
+    right = margin_right,
+    left = margin_left,
+    top = margin_top,
+    bottom = margin_bottom
+    }
 
 function pulseWidget.setColor(mute)
 	if mute then
@@ -95,7 +94,7 @@ end
 
 
 -- register mouse button actions
-pulseWidget:buttons(awful.util.table.join(
+pulseBar.widget:buttons(awful.util.table.join(
 		awful.button({ }, 1, pulseWidget.ToggleMute),
 		awful.button({ }, 3, pulseWidget.LaunchMixer),
 		awful.button({ }, 4, pulseWidget.Up),
